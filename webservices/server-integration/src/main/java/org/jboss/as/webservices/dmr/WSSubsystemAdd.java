@@ -21,6 +21,15 @@
  */
 package org.jboss.as.webservices.dmr;
 
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
+import static org.jboss.as.webservices.dmr.Constants.CONFIGURATION;
+import static org.jboss.as.webservices.dmr.Constants.MODIFY_SOAP_ADDRESS;
+import static org.jboss.as.webservices.dmr.Constants.WEBSERVICE_HOST;
+import static org.jboss.as.webservices.dmr.Constants.WEBSERVICE_PORT;
+import static org.jboss.as.webservices.dmr.Constants.WEBSERVICE_SECURE_PORT;
+
+import java.net.UnknownHostException;
+
 import org.jboss.as.controller.BasicOperationResult;
 import org.jboss.as.controller.ModelAddOperationHandler;
 import org.jboss.as.controller.OperationContext;
@@ -34,9 +43,7 @@ import org.jboss.as.controller.operations.validation.ModelTypeValidator;
 import org.jboss.as.controller.operations.validation.ParametersValidator;
 import org.jboss.as.server.BootOperationContext;
 import org.jboss.as.server.BootOperationHandler;
-import org.jboss.as.server.deployment.Phase;
 import org.jboss.as.webservices.config.ServerConfigImpl;
-import org.jboss.as.webservices.deployers.WebServiceRefAnnotationParsingProcessor;
 import org.jboss.as.webservices.service.EndpointRegistryService;
 import org.jboss.as.webservices.service.ServerConfigService;
 import org.jboss.as.webservices.util.WSServices;
@@ -44,11 +51,6 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
 import org.jboss.logging.Logger;
 import org.jboss.msc.service.ServiceTarget;
-
-import java.net.UnknownHostException;
-
-import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
-import static org.jboss.as.webservices.dmr.Constants.*;
 
 /**
  * @author alessio.soldano@jboss.com
@@ -100,7 +102,7 @@ public class WSSubsystemAdd implements ModelAddOperationHandler, BootOperationHa
                     resultHandler.handleResultComplete();
                 }
             });
-            updateContext.addDeploymentProcessor(Phase.PARSE, Phase.PARSE_WEB_SERVICE_INJECTION_ANNOTATION, new WebServiceRefAnnotationParsingProcessor());
+            //updateContext.addDeploymentProcessor(Phase.PARSE, Phase.PARSE_WEB_SERVICE_INJECTION_ANNOTATION, new WebServiceRefAnnotationParsingProcessor());
         } else {
             resultHandler.handleResultComplete();
         }
