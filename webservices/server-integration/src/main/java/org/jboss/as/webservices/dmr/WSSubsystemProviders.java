@@ -74,6 +74,13 @@ class WSSubsystemProviders {
         }
     };
 
+    static final DescriptionProvider ENDPOINTS_DESCRIBE = new DescriptionProvider() {
+
+        public ModelNode getModelDescription(final Locale locale) {
+            return CommonDescriptions.getSubsystemDescribeOperation(locale);
+        }
+    };
+
     private static ResourceBundle getResourceBundle(Locale locale) {
         if (locale == null) {
             locale = Locale.getDefault();
@@ -95,16 +102,20 @@ class WSSubsystemProviders {
             subsystem.get(ATTRIBUTES, CONFIGURATION, DESCRIPTION).set(bundle.getString("configuration"));
             subsystem.get(ATTRIBUTES, CONFIGURATION, TYPE).set(ModelType.OBJECT);
             subsystem.get(ATTRIBUTES, CONFIGURATION, REQUIRED).set(true);
-            subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, MODIFY_SOAP_ADDRESS, DESCRIPTION).set(bundle.getString("modify-soap-address"));
+            subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, MODIFY_SOAP_ADDRESS, DESCRIPTION).set(
+                    bundle.getString("modify-soap-address"));
             subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, MODIFY_SOAP_ADDRESS, TYPE).set(ModelType.BOOLEAN);
             subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, MODIFY_SOAP_ADDRESS, REQUIRED).set(true);
-            subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_HOST, DESCRIPTION).set(bundle.getString("web-service-host"));
+            subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_HOST, DESCRIPTION).set(
+                    bundle.getString("web-service-host"));
             subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_HOST, TYPE).set(ModelType.STRING);
             subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_HOST, REQUIRED).set(true);
-            subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_PORT, DESCRIPTION).set(bundle.getString("web-service-port"));
+            subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_PORT, DESCRIPTION).set(
+                    bundle.getString("web-service-port"));
             subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_PORT, TYPE).set(ModelType.INT);
             subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_PORT, REQUIRED).set(false);
-            subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_SECURE_PORT, DESCRIPTION).set(bundle.getString("web-service-secure-port"));
+            subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_SECURE_PORT, DESCRIPTION).set(
+                    bundle.getString("web-service-secure-port"));
             subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_SECURE_PORT, TYPE).set(ModelType.INT);
             subsystem.get(ATTRIBUTES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_SECURE_PORT, REQUIRED).set(false);
 
@@ -122,16 +133,20 @@ class WSSubsystemProviders {
             op.get(REQUEST_PROPERTIES, CONFIGURATION, DESCRIPTION).set(bundle.getString("configuration"));
             op.get(REQUEST_PROPERTIES, CONFIGURATION, TYPE).set(ModelType.OBJECT);
             op.get(REQUEST_PROPERTIES, CONFIGURATION, REQUIRED).set(true);
-            op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, MODIFY_SOAP_ADDRESS, DESCRIPTION).set(bundle.getString("modify-soap-address"));
+            op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, MODIFY_SOAP_ADDRESS, DESCRIPTION).set(
+                    bundle.getString("modify-soap-address"));
             op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, MODIFY_SOAP_ADDRESS, TYPE).set(ModelType.BOOLEAN);
             op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, MODIFY_SOAP_ADDRESS, REQUIRED).set(true);
-            op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_HOST, DESCRIPTION).set(bundle.getString("web-service-host"));
+            op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_HOST, DESCRIPTION).set(
+                    bundle.getString("web-service-host"));
             op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_HOST, TYPE).set(ModelType.STRING);
             op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_HOST, REQUIRED).set(true);
-            op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_PORT, DESCRIPTION).set(bundle.getString("web-service-port"));
+            op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_PORT, DESCRIPTION).set(
+                    bundle.getString("web-service-port"));
             op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_PORT, TYPE).set(ModelType.INT);
             op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_PORT, REQUIRED).set(false);
-            op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_SECURE_PORT, DESCRIPTION).set(bundle.getString("web-service-secure-port"));
+            op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_SECURE_PORT, DESCRIPTION).set(
+                    bundle.getString("web-service-secure-port"));
             op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_SECURE_PORT, TYPE).set(ModelType.INT);
             op.get(REQUEST_PROPERTIES, CONFIGURATION, VALUE_TYPE, WEBSERVICE_SECURE_PORT, REQUIRED).set(false);
 
