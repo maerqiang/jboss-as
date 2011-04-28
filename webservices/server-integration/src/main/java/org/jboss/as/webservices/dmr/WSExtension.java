@@ -68,6 +68,8 @@ public class WSExtension implements Extension {
 
     public static final String SUBSYSTEM_NAME = "webservices";
 
+    public static final String ENDPOINTS_NAME = "endpoints";
+
     private static final WebservicesSubsystemParser PARSER = new WebservicesSubsystemParser();
 
     @Override
@@ -77,7 +79,10 @@ public class WSExtension implements Extension {
         final ModelNodeRegistration registration = subsystem.registerSubsystemModel(WSSubsystemProviders.SUBSYSTEM);
         registration.registerOperationHandler(ADD, WSSubsystemAdd.INSTANCE, WSSubsystemProviders.SUBSYSTEM_ADD, false);
         registration.registerOperationHandler(DESCRIBE, WSSubsystemDescribe.INSTANCE, WSSubsystemProviders.SUBSYSTEM_DESCRIBE, false, OperationEntry.EntryType.PRIVATE);
-        registration.registerOperationHandler("list", WSEndpointsDescribe.INSTANCE, WSEndpointsDescribe.INSTANCE, false);
+        registration.registerOperationHandler(WSEndpointsListOperationHandler.OPERATION_NAME, WSEndpointsListOperationHandler.INSTANCE, WSSubsystemProviders.ENDPOINTS_LIST, false);
+        for (String attributeName : WSEndpointsMetrics.ATTRIBUTES) {
+            registration.registerMetric(attributeName, WSEndpointsMetrics.INSTANCE);
+        }
         subsystem.registerXMLElementWriter(PARSER);
     }
 

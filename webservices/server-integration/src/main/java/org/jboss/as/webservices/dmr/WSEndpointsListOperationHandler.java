@@ -21,29 +21,28 @@
  */
 package org.jboss.as.webservices.dmr;
 
-import java.util.Locale;
-
 import javax.management.ObjectName;
 
 import org.jboss.as.controller.BasicOperationResult;
-import org.jboss.as.controller.ModelQueryOperationHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
+import org.jboss.as.controller.OperationHandler;
 import org.jboss.as.controller.OperationResult;
 import org.jboss.as.controller.ResultHandler;
 import org.jboss.as.controller.RuntimeTask;
 import org.jboss.as.controller.RuntimeTaskContext;
-import org.jboss.as.controller.descriptions.DescriptionProvider;
 import org.jboss.as.webservices.util.WSServices;
 import org.jboss.dmr.ModelNode;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.management.EndpointRegistry;
 
-public class WSEndpointsDescribe implements ModelQueryOperationHandler, DescriptionProvider {
-    static final WSEndpointsDescribe INSTANCE = new WSEndpointsDescribe();
-
-    static final String[] NO_LOCATION = new String[0];
+/**
+ * @author <a href="mailto:ema@redhat.com">Jim Ma</a>
+ */
+public class WSEndpointsListOperationHandler implements OperationHandler {
+    public static final String OPERATION_NAME = "list-endpoints";
+    static final WSEndpointsListOperationHandler INSTANCE = new WSEndpointsListOperationHandler();
 
     /** {@inheritDoc} */
     @Override
@@ -53,24 +52,20 @@ public class WSEndpointsDescribe implements ModelQueryOperationHandler, Descript
         if (context.getRuntimeContext() != null) {
             context.getRuntimeContext().setRuntimeTask(new RuntimeTask() {
                 public void execute(RuntimeTaskContext context) throws OperationFailedException {
-                    // final PathAddress address = PathAddress.pathAddress(operation.require(OP_ADDR));
-                    // final String name = address.getLastElement().getValue();
-                    // final String attributeName = operation.require(NAME).asString();
-
                     final ServiceController<?> controller = context.getServiceRegistry()
                             .getService(WSServices.REGISTRY_SERVICE);
                     if (controller != null) {
                         try {
                             final EndpointRegistry registry = (EndpointRegistry) controller.getValue();
                             final ModelNode result = new ModelNode();
-
+                            result.get("deployed-count").set(registry.getEndpoints().size());
                             for (ObjectName obj : registry.getEndpoints()) {
                                 Endpoint endpoint = registry.getEndpoint(obj);
-                                String endpointName = endpoint.getTargetBeanName();
-                                result.get(endpointName).set("address", endpoint.getAddress());
-                                result.get(endpointName).set("shortName", endpoint.getShortName());
-                                result.get(endpointName).set("objectName", endpoint.getName().toString());
-                                result.get(endpointName).set("implementation", endpoint.getTargetBeanClass().getName());
+                                String endpointName = obj.toString();
+                                result.get(endpointName).add("address", endpoint.getAddress());
+                                result.get(endpointName).add("wsdlURL", endpoint.getAddress() + "?wsdl");
+                                result.get(endpointName).add("shortName", endpoint.getShortName());
+                                result.get(endpointName).add("implClass", endpoint.getTargetBeanClass().getName());
 
                             }
                             resultHandler.handleResultFragment(new String[0], result);
@@ -80,23 +75,16 @@ public class WSEndpointsDescribe implements ModelQueryOperationHandler, Descript
                                     + e.getMessage()));
                         }
                     } else {
-                        resultHandler.handleResultFragment(NO_LOCATION,
+                        resultHandler.handleResultFragment(ResultHandler.EMPTY_LOCATION,
                                 new ModelNode().set("no webserivce endpoints available"));
                         resultHandler.handleResultComplete();
                     }
                 }
             });
         } else {
-            resultHandler.handleResultFragment(NO_LOCATION, new ModelNode().set("no webservice endpoints available"));
+            resultHandler.handleResultFragment(ResultHandler.EMPTY_LOCATION, new ModelNode().set("no webservice endpoints available"));
             resultHandler.handleResultComplete();
         }
         return new BasicOperationResult();
     }
-
-    @Override
-    public ModelNode getModelDescription(Locale locale) {
-        // FIXME getModelDescription
-        return new ModelNode();
-    }
-
 }
