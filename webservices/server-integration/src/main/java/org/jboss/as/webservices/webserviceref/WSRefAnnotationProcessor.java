@@ -104,7 +104,7 @@ public class WSRefAnnotationProcessor implements DeploymentUnitProcessor {
     }
 
     private static void processFieldRef(final DeploymentUnit unit, final WSRefAnnotationWrapper annotation, final FieldInfo fieldInfo) throws DeploymentUnitProcessingException {
-        final String fieldName = fieldInfo.name();
+        final String fieldName = fieldInfo.name(); 
         final String injectionType = isEmpty(annotation.type()) || annotation.type().equals(Object.class.getName()) ? fieldInfo.type().name().toString() : annotation.type();
         final InjectionTarget injectionTarget = new FieldInjectionTarget(fieldInfo.declaringClass().name().toString(),  fieldName, injectionType);
         final String bindingName = isEmpty(annotation.name()) ? fieldInfo.declaringClass().name().toString() + "/" + fieldInfo.name() : annotation.name();
@@ -133,7 +133,7 @@ public class WSRefAnnotationProcessor implements DeploymentUnitProcessor {
     }
 
     private static void processRef(final DeploymentUnit unit, final String type, final WSRefAnnotationWrapper annotation, final ClassInfo classInfo, final InjectionTarget injectionTarget, final String bindingName) throws DeploymentUnitProcessingException {
-        final UnifiedServiceRefMetaData serviceRefUMDM = getServiceRef(unit, bindingName);
+        final UnifiedServiceRefMetaData serviceRefUMDM = getServiceRef(unit, bindingName, classInfo.name().toString());
         initServiceRef(unit, serviceRefUMDM, type, annotation);
         processWSFeatures(unit, serviceRefUMDM, injectionTarget, classInfo);
 
@@ -162,9 +162,12 @@ public class WSRefAnnotationProcessor implements DeploymentUnitProcessor {
         }
     }
 
-    private static UnifiedServiceRefMetaData getServiceRef(final DeploymentUnit unit, final String name) {
+    private static UnifiedServiceRefMetaData getServiceRef(final DeploymentUnit unit, final String name, final String scopeName) {
         final WSReferences wsRefRegistry = getWSRefRegistry(unit);
         UnifiedServiceRefMetaData serviceRefUMDM = wsRefRegistry.get(name);
+        if (serviceRefUMDM == null) {
+            serviceRefUMDM = wsRefRegistry.get(scopeName + "/" + name);
+        }
         if (serviceRefUMDM == null) {
             serviceRefUMDM = new UnifiedServiceRefMetaData(getUnifiedVirtualFile(unit));
             serviceRefUMDM.setServiceRefName(name);

@@ -44,6 +44,7 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.module.ResourceRoot;
 import org.jboss.as.server.deployment.reflect.DeploymentReflectionIndex;
 import org.jboss.as.webservices.util.VirtualFileAdaptor;
+import org.jboss.metadata.ejb.spec.EnterpriseBeanMetaData;
 import org.jboss.metadata.javaee.spec.ResourceInjectionTargetMetaData;
 import org.jboss.metadata.javaee.spec.ServiceReferenceMetaData;
 import org.jboss.metadata.javaee.spec.ServiceReferencesMetaData;
@@ -65,9 +66,15 @@ public final class WSRefDDProcessor extends AbstractDeploymentDescriptorBindings
             return Collections.<BindingConfiguration> emptyList();
         }
 
+        String scopeName = "";
+        if (environment.getEnvironment() instanceof EnterpriseBeanMetaData) {
+            EnterpriseBeanMetaData enterpriseBeanMD = (EnterpriseBeanMetaData) environment.getEnvironment();
+            scopeName = enterpriseBeanMD.getEjbClass() + "/";
+        }
+
         final List<BindingConfiguration> bindingDescriptions = new LinkedList<BindingConfiguration>();
         for (final ServiceReferenceMetaData serviceRefMD : serviceRefsMD) {
-            final UnifiedServiceRefMetaData serviceRefUMDM = getServiceRef(unit, serviceRefMD);
+            final UnifiedServiceRefMetaData serviceRefUMDM = getServiceRef(unit, scopeName, serviceRefMD);
             final WSRefValueSource valueSource = new WSRefValueSource(serviceRefUMDM);
             final BindingConfiguration bindingConfiguration = new BindingConfiguration(serviceRefUMDM.getServiceRefName(), valueSource);
             bindingDescriptions.add(bindingConfiguration);
@@ -78,14 +85,14 @@ public final class WSRefDDProcessor extends AbstractDeploymentDescriptorBindings
         return bindingDescriptions;
     }
 
-    private static UnifiedServiceRefMetaData getServiceRef(final DeploymentUnit unit, final ServiceReferenceMetaData serviceRefMD) throws DeploymentUnitProcessingException {
+    private static UnifiedServiceRefMetaData getServiceRef(final DeploymentUnit unit, final String  scopeName,  final ServiceReferenceMetaData serviceRefMD) throws DeploymentUnitProcessingException {
         // construct service ref
         final UnifiedServiceRefMetaData serviceRefUMDM = new UnifiedServiceRefMetaData(getUnifiedVirtualFile(unit));
         translate(serviceRefMD, serviceRefUMDM);
         processWSFeatures(unit, serviceRefMD.getInjectionTargets(), serviceRefUMDM);
         // register it
         final WSReferences wsRefRegistry = getWSRefRegistry(unit);
-        wsRefRegistry.add(serviceRefMD.getName(), serviceRefUMDM);
+        wsRefRegistry.add(scopeName + serviceRefMD.getName(), serviceRefUMDM);
         return serviceRefUMDM;
     }
 
