@@ -104,7 +104,7 @@ public class WSRefAnnotationProcessor implements DeploymentUnitProcessor {
     }
 
     private static void processFieldRef(final DeploymentUnit unit, final WSRefAnnotationWrapper annotation, final FieldInfo fieldInfo) throws DeploymentUnitProcessingException {
-        final String fieldName = fieldInfo.name(); 
+        final String fieldName = fieldInfo.name();
         final String injectionType = isEmpty(annotation.type()) || annotation.type().equals(Object.class.getName()) ? fieldInfo.type().name().toString() : annotation.type();
         final InjectionTarget injectionTarget = new FieldInjectionTarget(fieldInfo.declaringClass().name().toString(),  fieldName, injectionType);
         final String bindingName = isEmpty(annotation.name()) ? fieldInfo.declaringClass().name().toString() + "/" + fieldInfo.name() : annotation.name();
