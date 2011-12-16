@@ -66,6 +66,7 @@ public class ServiceRefTestCase {
         .addClasses(EJB3Bean.class, EndpointInterface.class, EndpointService.class, StatelessBean.class, StatelessRemote.class)
         .addAsManifestResource("ws/serviceref/ejb-jar.xml", "ejb-jar.xml")
         .addAsManifestResource("ws/serviceref/jboss-ejb3.xml", "jboss-ejb3.xml")
+        .addAsManifestResource("ws/serviceref/jax-ws-catalog.xml", "jax-ws-catalog.xml")
         .addAsManifestResource("ws/serviceref/wsdl/TestService.wsdl", "wsdl/TestService.wsdl");
     }
 
@@ -107,6 +108,16 @@ public class ServiceRefTestCase {
         // test StatelessBean2
         final String result2 = remote2.echo4("Relay4");
         Assert.assertEquals("Second EJB:Relay4", result2);
+    }
+    
+    @Test
+    public void testEJBRelay5() throws Exception {
+        // test StatelessBean
+        final String result1 = remote1.echo5("Relay5");
+        Assert.assertEquals("First EJB:Relay5", result1);
+        // test StatelessBean2
+        final String result2 = remote2.echo5("Relay5");
+        Assert.assertEquals("Second EJB:Relay5", result2);
     }
 
 }

@@ -51,6 +51,10 @@ public class StatelessBean implements StatelessRemote {
 
     // via XML
     EndpointInterface _endpoint4;
+    
+    //Check if catalog works
+    @WebServiceRef(value = EndpointService.class, mappedName = "jbossws-client/service/TestService", wsdlLocation = "http://test.notavailbe.com/TestService?wsdl")
+    EndpointInterface endpoint5;
 
     @Resource
     private String id;
@@ -85,6 +89,13 @@ public class StatelessBean implements StatelessRemote {
             throw new IllegalArgumentException("Serviceref for property 'endpoint4' not injected");
 
         return _endpoint4.echo(id + ":" + string);
+    }
+    
+    public String echo5(final String string) throws Exception {
+        if (null == endpoint5)
+            throw new IllegalArgumentException("Serviceref for property 'endpoint4' not injected");
+
+        return endpoint5.echo(id + ":" + string);
     }
 
 }
